@@ -1,5 +1,4 @@
 var express = require('express');
-var mqtt=require('mqtt');
 var cors = require('cors');
 var app = express();
 var PORT = 3000;
