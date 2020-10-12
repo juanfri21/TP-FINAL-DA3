@@ -1,0 +1,8 @@
+/*
+mosquitto
+mosquitto_sub -t 'test' -h localhost
+mosquitto_pub -t 'test' -m '{ "id": 1, "h": 22, "t": 23 }' -h localhost
+*/
+
+var mqtt_url = process.env.URL || 'mqtt://localhost:1883';
+var topic = process.env.TOPIC || 'test';
