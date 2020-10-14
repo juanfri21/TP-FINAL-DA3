@@ -120,4 +120,6 @@ dist
 .pnp.*
 
 /.vscode
-/Api-nodejs/db/data
+/db/data
+/mqtt-broker/data
+/mqtt-broker/log
