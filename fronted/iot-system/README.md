@@ -1,4 +1,4 @@
-# iot-system
+# measurements-visualizations
 
 ## Project setup
 ```
