@@ -4,7 +4,8 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 const routerOptions = [
-    { path: '/mediciones/:idDispositivo', name: 'mediciones', meta: { showBreadcrumb: true } },
+    { path: '/:idUsuario', name: 'home', meta: { showBreadcrumb: true } },
+    { path: '/dispositivo/:idDispositivo', name: 'dispositivo', meta: { showBreadcrumb: true } },
 	{ path: '/editar/:idDispositivo', name: 'editar', meta: { showBreadcrumb: true } },
 	{ path: '/informacion/:idDispositivo', name: 'informacion', meta: { showBreadcrumb: true } },
     
