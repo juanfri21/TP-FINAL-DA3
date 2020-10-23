@@ -83,7 +83,7 @@ export default {
 		clickOpcionDispositivo(dispositivo) {
 			this.$router.push({
 				name: 'dispositivo',
-				params: { idDispositivo: dispositivo.idDispositivo },
+				params: { idDispositivo: dispositivo.idDispositivo, dispositivo },
 			});
 			console.log(dispositivo);
 		},
