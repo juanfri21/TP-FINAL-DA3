@@ -35,13 +35,28 @@ dataApi.altaDispositivo = (idDispositivo) => {
 };
 
 // -- -----------------------------------------------------
+// -- API sensores
+// -- -----------------------------------------------------
+
+dataApi.listaSensores = (idDispositivo) => {
+	const path_request = `/sensor/${idDispositivo}`;
+
+	return iotSystemApi.get(`${path_request}`);
+};
+
+// -- -----------------------------------------------------
 // -- API mediciones
 // -- -----------------------------------------------------
 
-// dataApi.getLastData = (station_id, data_group, time_period) => {
-// 	const path_request = `/medicion/${station_id}/${data_group}/last/${time_period}`;
+// dataApi.ultimosDatos = (uuidSensor, tipo, cantidad) => {
+// 	const path_request = `/medicion/${uuidSensor}/${tipo}/${cantidad}`;
 
-// 	return iotSystemApi.get(`${path_request}`, options);
+// 	return iotSystemApi.get(`${path_request}`);
 // };
+dataApi.ultimosDatos = (idDispositivo, tipo, cantidad) => {
+	const path_request = `/medicion/ultimosDatos/${idDispositivo}/${tipo}/${cantidad}`;
+
+	return iotSystemApi.get(`${path_request}`);
+};
 
 export default dataApi;
