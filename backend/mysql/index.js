@@ -5,7 +5,7 @@ var configMysql = {
     port: 3306,
     user: 'root',
     password: 'userpass',
-    database: 'DA3'
+    database: 'iot-system'
 }
 var pool = mysql.createPool(configMysql);
 pool.getConnection((err, connection) => {

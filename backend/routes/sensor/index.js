@@ -1,11 +1,11 @@
 var express = require('express');
-var routerDispositivo = express.Router();
+var routerSensores = express.Router();
 var pool = require('../../mysql');
 
 //Devuelve un array de dispositivos
-routerDispositivo.get('/', function (req, res) {
+routerSensores.get('/', function (req, res) {
 	console.log('api disp');
-	pool.query('Select * from Dispositivos', function (err, result, fields) {
+	pool.query('Select * from Sensores', function (err, result, fields) {
 		if (err) {
 			res.send(err).status(400);
 			return;
@@ -14,9 +14,8 @@ routerDispositivo.get('/', function (req, res) {
 	});
 });
 
-// obtengo lista de dispositivo de un usuario
-routerDispositivo.get('/:idUsuario', function (req, res) {
-	pool.query('Select * from Dispositivos where idUsuario=?', [req.params.idUsuario], function (
+routerSensores.get('/:idDispositivo', function (req, res) {
+	pool.query('Select * from Sensores where idDispositivo=?', [req.params.idDispositivo], function (
 		err,
 		result,
 		fields
@@ -29,11 +28,10 @@ routerDispositivo.get('/:idUsuario', function (req, res) {
 	});
 });
 
-// agrego dispositivo
-routerDispositivo.post('/agregar', function (req, res) {
+routerSensores.post('/agregar', function (req, res) {
 	console.log(req.body);
 	pool.query(
-		'INSERT INTO Dispositivos (uuid, nombre,ubicacion,conectado,fecha_creacion,fecha_actualizacion,descripcion,idUsuario) values (?,?,?,?,?,?,?,?)',
+		'INSERT INTO Sensores (uuid, nombre,ubicacion,conectado,fecha_creacion,fecha_actualizacion,descripcion,idUsuario) values (?,?,?,?,?,?,?,?)',
 		[
 			req.body.uuid,
 			req.body.nombre,
@@ -54,4 +52,4 @@ routerDispositivo.post('/agregar', function (req, res) {
 	);
 });
 
-module.exports = routerDispositivo;
+module.exports = routerSensores;

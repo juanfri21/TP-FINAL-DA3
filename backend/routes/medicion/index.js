@@ -1,27 +1,14 @@
 var express = require('express');
-var routerMedicion = express.Router();
+var moment = require('moment');
+
+var routerMetrica = express.Router();
 var pool = require('../../mysql');
 
 //Espera recibir por parámetro un id de dispositivo y devuelve su última medición
-routerMedicion.get('/:idDispositivo', function (req, res) {
+routerMetrica.get('/ultimosDatos/:idDispositivo/:tipo/:cantidad', function (req, res) {
 	pool.query(
-		'Select * from Mediciones where uuid=? order by fecha desc',
-		[req.params.idDispositivo],
-		function (err, result, fields) {
-			if (err) {
-				res.send(err).status(400);
-				return;
-			}
-			res.send(result[0]);
-		}
-	);
-});
-
-//Espera recibir por parámetro un id de dispositivo y devuelve todas sus mediciones
-routerMedicion.get('/:idDispositivo/todas', function (req, res) {
-	pool.query(
-		'Select * from Mediciones where uuid=? order by fecha desc LIMIT 10',
-		[req.params.idDispositivo],
+		`SELECT s.nombre,ubicacion,conectado,unidad, m.valor,fecha FROM Sensores as s JOIN Metricas as m WHERE s.idDispositivo=? and s.tipo=? and s.conectado=1 order by fecha desc LIMIT `+req.params.cantidad, 
+		[req.params.idDispositivo,req.params.tipo],
 		function (err, result, fields) {
 			if (err) {
 				res.send(err).status(400);
@@ -31,12 +18,59 @@ routerMedicion.get('/:idDispositivo/todas', function (req, res) {
 		}
 	);
 });
+
+// routerMetrica.get('/ultimosDatos', function (req, res) {
+// 	pool.query(
+// 		'Insert into Metricas (fecha,valor,idSensor) values (?,?,?)',
+// 		[req.body.fecha, req.body.valor, req.body.idSensor],
+// 		function (err, result, fields) {
+// 			if (err) {
+// 				res.send(err).status(400);
+// 				return;
+// 			}
+// 			res.send(result);
+// 		}
+// 	);
+// });
+
+routerMetrica.get('/:uuidSensor/:tipo/:cantidad', function (req, res) {
+	console.log(req.params.uuidSensor);
+	let fechas=[]
+	pool.query(
+		`SELECT s.nombre,ubicacion,conectado,unidad, m.valor,fecha FROM Sensores as s JOIN Metricas as m WHERE s.tipo=? and s.uuidSensor=? and m.uuidSensor=? order by fecha desc LIMIT `+req.params.cantidad,
+		[req.params.tipo, req.params.uuidSensor, req.params.uuidSensor],
+		function (err, result, fields) {
+			if (err) {
+				res.send(err).status(400);
+				return;
+			}
+			res.send(result);
+		}
+	);
+});
+
+// routerMetrica.get('/:idDispositivo/:idSensor/:tipo/:cantidad', function (req, res) {
+// 	console.log(req.params);
+// 	pool.query(
+
+// 		`SELECT s.nombre,ubicacion,conectado,unidad, m.valor,fecha FROM Sensores as s JOIN Metricas as m WHERE s.tipo=? and s.uuidSensor=? and m.uuidSensor=? and s.idDispositivo=? order by fecha desc LIMIT `+req.params.cantidad,
+// 		[req.params.tipo, req.params.idSensor, req.params.idSensor, req.params.idDispositivo],
+// 		function (err, result, fields) {
+// 			if (err) {
+// 				res.send(err).status(400);
+// 				return;
+// 			}
+// 			console.log(result);
+// 			res.send(result);
+// 		}
+// 	);
+// });
 
 //Espera recibir por parámetro un id de dispositivo y un valor de medición y lo inserta en base de datos.
-routerMedicion.post('/agregar', function (req, res) {
+routerMetrica.post('/agregar', function (req, res) {
 	pool.query(
-		'Insert into Mediciones (fecha,valor,dispositivoId) values (?,?,?)',
-		[req.body.fecha, req.body.valor, req.body.dispositivoId],
+		'Insert into Metricas (fecha,valor,idSensor) values (?,?,?)',
+		[req.body.fecha, req.body.valor, req.body.idSensor],
 		function (err, result, fields) {
 			if (err) {
 				res.send(err).status(400);
@@ -47,4 +81,4 @@ routerMedicion.post('/agregar', function (req, res) {
 	);
 });
 
-module.exports = routerMedicion;
+module.exports = routerMetrica;

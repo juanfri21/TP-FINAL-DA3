@@ -11,4 +11,4 @@ var topic = process.env.TOPIC || 'test';
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mosquitto_broker
 
 // publish con ip del contenedor:
-mosquitto_pub -t 'mediciones' -m '{ "u": "sensor_1", "h": 22, "t": 23 }' -h IP-mosquito
+mosquitto_pub -t 'mediciones' -m '{ "u": "sensor_1", "h": 22, "t": 23 }' -h IP-mosquito --id client-id

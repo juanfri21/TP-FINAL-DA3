@@ -24,22 +24,34 @@ client.on('connect', function () {
 client.on('message', function (topic, message, packet) {
 	var data = JSON.parse(message.toString());
 
-	console.log(topic, data);
+	// data.forEach((element) => {
 	pushDataBase(topic, data);
+	// });
 });
 
 function pushDataBase(topic, data) {
 	// TODO: agregar timezone en la tabla de dispositivos
-	let current_datetime = moment().utcOffset('-0300').format("YYYY-MM-DD HH:mm:ss"); 
-	console.log(current_datetime)
+	let current_datetime = moment().utcOffset('-0300').format('YYYY-MM-DD HH:mm:ss');
+	console.log(data);
 	switch (topic) {
 		case topic_mediciones:
 			console.log('insert medicion');
-			pool.query('Insert into Mediciones(fecha,humedad,temperatura,uuid) values (?,?,?,?)', [
+			pool.query('Insert into Metricas(fecha,valor,uuidSensor) values (?,?,?)', [
 				current_datetime,
-				data.h,
-				data.t,
-				data.u,
+				data[0].v,
+				data[0].u,
+				function (err, result, fields) {
+					if (err) {
+						console.log(err);
+						return;
+					}
+					console.log(result);
+				},
+			]);
+			pool.query('Insert into Metricas(fecha,valor,uuidSensor) values (?,?,?)', [
+				current_datetime,
+				data[1].v,
+				data[1].u,
 				function (err, result, fields) {
 					if (err) {
 						console.log(err);
