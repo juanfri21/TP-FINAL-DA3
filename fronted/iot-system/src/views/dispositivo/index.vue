@@ -121,7 +121,6 @@ export default {
 					dataApi
 						.ultimosDatos(idDispositivo, 'actuador', 1)
 						.then((res) => {
-							console.log(res.data);
 							this.actuador = [...res.data];
 							console.log(this.actuador);
 							// this.showProgressLoadingOff();
@@ -166,50 +165,6 @@ export default {
 			let data_graph_list = [];
 			let trace_1 = [];
 			let trace_2 = [];
-			// const newArr = this.mediciones_sensores.filter((el, index) => this.mediciones_sensores.fecha.indexOf(el) === index);
-			// console.log(newArr);
-
-			this.mediciones_sensores.forEach((element) => {
-				console.log(element.nombre + ' ' + element.valor + ' ' + element.fecha);
-				// console.log(element.valor);
-			});
-			// newArr.forEach((element) => {
-			// 	console.log(element.nombre + ' ' + element.valor + ' ' + element.fecha);
-			// 	console.log(element.valor);
-			// });
-
-			console.log(
-				this.mediciones_sensores
-					.filter((sen) => sen.nombre == this.lista_sensores[0].nombre)
-					.map(function(item) {
-						return item.valor;
-					})
-			);
-			console.log(
-				this.mediciones_sensores
-					.filter((sen) => sen.nombre == this.lista_sensores[0].nombre)
-					.map(function(item) {
-						return moment(item.fecha)
-							.parseZone()
-							.format('YYYY-MM-DD HH:mm:ss');
-					})
-			);
-			console.log(
-				this.mediciones_sensores
-					.filter((sen) => sen.nombre == this.lista_sensores[1].nombre)
-					.map(function(item) {
-						return item.valor;
-					})
-			);
-			console.log(
-				this.mediciones_sensores
-					.filter((sen) => sen.nombre == this.lista_sensores[1].nombre)
-					.map(function(item) {
-						return moment(item.fecha)
-							.parseZone()
-							.format('YYYY-MM-DD HH:mm:ss');
-					})
-			);
 
 			trace_1.push({
 				y: this.mediciones_sensores
