@@ -23,6 +23,14 @@ client.on('connect', function () {
 });
 client.on('message', function (topic, message, packet) {
 	var data = JSON.parse(message.toString());
+	console.log('mensaje');
+	console.log(data);
+	console.log(data[0]);
+
+	console.log(topic);
+	
+	client.publish("SERIAL_1/actuador", 'Hello mqtt')
+
 
 	// data.forEach((element) => {
 	pushDataBase(topic, data);
@@ -38,8 +46,8 @@ function pushDataBase(topic, data) {
 			console.log('insert medicion');
 			pool.query('Insert into Metricas(fecha,valor,uuidSensor) values (?,?,?)', [
 				current_datetime,
-				data[0].v,
-				data[0].u,
+				data[0].v,	// valor
+				data[0].u,	// uuidSensor
 				function (err, result, fields) {
 					if (err) {
 						console.log(err);
@@ -62,6 +70,19 @@ function pushDataBase(topic, data) {
 			]);
 			break;
 		case topic_actuadores:
+			console.log('insert actuador');
+			pool.query('Insert into Metricas(fecha,valor,uuidSensor) values (?,?,?)', [
+				current_datetime,
+				data[0].v,	// valor
+				data[0].u,	// uuidSensor
+				function (err, result, fields) {
+					if (err) {
+						console.log(err);
+						return;
+					}
+					console.log(result);
+				},
+			]);
 			break;
 		case topic_config:
 			break;

@@ -1,7 +1,8 @@
 #!/bin/bash
 cd backend
 echo "service mosquitto stop"
-sudo service mosquitto stop
+service mosquitto stop &
+sleep 5
 echo "Cerrando contenedores que esten corriendo"
 docker-compose down &
 sleep 5

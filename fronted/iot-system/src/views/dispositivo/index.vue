@@ -18,7 +18,9 @@
 								><h3 align="left">{{ actuador[0].nombre }}</h3></v-col
 							>
 							<v-col cols="2">
-								<v-btn elevation="5" dark small>Encender</v-btn>
+								<v-btn elevation="5" dark small @click="publish">{{
+									this.estado_actuador
+								}}</v-btn>
 							</v-col>
 						</v-row>
 					</div>
@@ -61,12 +63,14 @@ export default {
 		elevation: 5,
 		showProgress: false,
 		error: false,
+		estado_actuador: '',
 	}),
 
 	created() {
 		this.showProgressLoadingOn();
 
 		this.dispositivo_info = this.$route.params.dispositivo;
+		console.log(this.dispositivo_info)
 		this.getListaSensores();
 	},
 	mounted() {},
@@ -80,16 +84,8 @@ export default {
 					this.mediciones_sensores = [];
 					console.log(res.data);
 					this.lista_sensores = [...res.data];
-					// res.data.forEach((sensor) => {
-					// 	this.getUltimosDatos(
-					// 		sensor.uuidSensor,
-					// 		sensor.tipo,
-					// 		sensor.tipo == 'sensor' ? 10 : 1
-					// 	);
-					// 	console.log('aaa');
-					// });
+
 					this.getUltimosDatos(this.dispositivo_info.idDispositivo, 'sensor', 20);
-					// console.log(res.data.length);
 
 					// console.log(this.mediciones_sensores.filter(sen=> sen.nombre == this.lista_sensores[0].nombre))
 					// if (this.mediciones_sensores.length) {
@@ -97,11 +93,6 @@ export default {
 					// 		this.fechas.push(moment(element.fecha).format('DD/MM/YYYY HH:mm:ss'));
 					// 		console.log(this.fechas);
 					// 	});
-					// }
-					// if (res.data) {
-					// 	this.lista_dispositivos = res.data;
-					// } else {
-					// 	alert('No se encontraron dispositivos');
 					// }
 				})
 				.catch((error) => {
@@ -122,7 +113,9 @@ export default {
 						.ultimosDatos(idDispositivo, 'actuador', 1)
 						.then((res) => {
 							this.actuador = [...res.data];
-							console.log(this.actuador);
+							console.log(this.actuador[0]);
+							this.estado_actuador = this.actuador[0].valor ? 'Apagar' : 'Encender';
+							this.$mqtt.subscribe('+/actuador', { qos: 1 });
 							// this.showProgressLoadingOff();
 						})
 						.catch((error) => {
@@ -145,6 +138,20 @@ export default {
 		},
 		showProgressLoadingOff() {
 			this.showProgress = false;
+		},
+		publish() {
+			console.log('publish');
+			// this.$mqtt.publish(`${this.dispositivo_info.uuid}/actuador`, this.actuador[0].title);
+			this.$mqtt.publish(`actuadores`, JSON.stringify([{
+				v: this.estado_actuador === 'Encender' ? '1' : '0',
+				u: `${this.dispositivo_info.uuid}_3`,
+			}]));
+			this.estado_actuador = this.estado_actuador === 'Encender' ? 'Apagar' : 'Encender';
+		},
+	},
+	mqtt: {
+		'+/actuador'(data, topic) {
+			console.log(topic + ': ' + String.fromCharCode.apply(null, data));
 		},
 	},
 
