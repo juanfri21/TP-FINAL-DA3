@@ -59,4 +59,10 @@ dataApi.ultimosDatos = (idDispositivo, tipo, cantidad) => {
 	return iotSystemApi.get(`${path_request}`);
 };
 
+dataApi.estadoActuador = (idDispositivo, tipo, cantidad) => {
+	const path_request = `/medicion/actuador/${idDispositivo}/${tipo}/${cantidad}`;
+
+	return iotSystemApi.get(`${path_request}`);
+};
+
 export default dataApi;

@@ -44,8 +44,8 @@ void App_Loop(void);
 /*==================[internal data definition]===============================*/
 
 // Device indentification
-const String DEVICE_ID = "dispositivo_1";
-const String UUID = "SERIAL_1";
+const String DEVICE_ID = "dispositivo_2";
+const String UUID = "SERIAL_2";
 const String UUID_SENSOR_HUMEDAD = UUID + "_1";
 const String UUID_SENSOR_TEMPERATURA = UUID + "_2";
 const String UUID_SENSOR_ACTUADOR = UUID + "_3";
@@ -59,11 +59,15 @@ const int MQTT_PORT = 1884;
 const String MQTT_USER = "";
 const String MQTT_PASS = "";
 // Mqtt message settings
-const String MQTT_TOPIC_INIT = DEVICE_ID + "/PublishTime";
+const String MQTT_TOPIC_INIT = UUID + "/PublishTime";
 
 const String MQTT_TOPIC_CONFIG = "config";
 const String MQTT_TOPIC_MEDICIONES = "mediciones";
-const String MQTT_TOPIC_ACTUADOR = DEVICE_ID + "actuador";
+const String MQTT_TOPIC_ACTUADOR = UUID + "/actuador";
+const String MQTT_TOPIC_ACTUADOR_ws_client = "ws/actuador";
+const String MQTT_TOPIC_ACTUADOR_api_client = "actuadores_api";
+
+
 
 
 /*==================[external data definition]===============================*/
@@ -131,7 +135,7 @@ void Mqtt_PublishTopic(String topic, String payload)
     Serial.print(" -> ");
     Serial.println(payload);
     // Publish message
-    MqttClient.publish(topic.c_str(), payload.c_str(), true);
+    MqttClient.publish(topic.c_str(), payload.c_str());
 }
 
 void Mqtt_SubscribeCallback(char *topic, byte *payload, unsigned int length)
@@ -159,12 +163,22 @@ void Mqtt_SubscribeCallback(char *topic, byte *payload, unsigned int length)
     }
     else if(strcmp(topic, MQTT_TOPIC_ACTUADOR.c_str()) == 0){
         int set_state = atoi((const char *)payload);
+        Serial.println(set_state);
         if(set_state){
             digitalWrite(LED_ONBOARD, true);
         }
         else{
             digitalWrite(LED_ONBOARD, false);
         }
+        char respuesta_ws_client[200];
+        // //[{ "u": "SERIAL_1_1", "v": 45422 },{ "u": "SERIAL_1_2", "v": 555 }]
+        snprintf(respuesta_ws_client, sizeof(respuesta_ws_client), "[{\"u\": \"%s\", \"v\": %d}]",UUID_SENSOR_ACTUADOR.c_str(), set_state);
+        // String respuesta_ws_client = "[{\"u\": "+String(UUID_SENSOR_ACTUADOR)+", \"v\": "+String(set_state)+"}]";
+       
+        // // Send MQTT Topic
+        Mqtt_PublishTopic(MQTT_TOPIC_ACTUADOR_ws_client, respuesta_ws_client);
+        Mqtt_PublishTopic(MQTT_TOPIC_ACTUADOR_api_client, respuesta_ws_client);
+
     }
     else
     {
@@ -210,13 +224,13 @@ void App_Loop()
         // Reset counter
         tickCounter = 0;
        
-        float humedad_random = random(10, 90);
-        float temperatura_random = random(10, 25);
+        float humedad_random = random(10.0, 90.0);
+        float temperatura_random = random(10.0, 25.0);
 
         char medicion_mentira[200];
         //[{ "u": "SERIAL_1_1", "v": 45422 },{ "u": "SERIAL_1_2", "v": 555 }]
-        snprintf(medicion_mentira, sizeof(medicion_mentira), "[{\"u\": \"%s\", \"v\": %f}, {\"u\": \"%s\", \"v\": %f}]",UUID_SENSOR_HUMEDAD, humedad_random, UUID_SENSOR_TEMPERATURA, temperatura_random);
-       
+        snprintf(medicion_mentira, sizeof(medicion_mentira), "[{\"u\": \"%s\", \"v\": %.2f}, {\"u\": \"%s\", \"v\": %.2f}]",UUID_SENSOR_HUMEDAD.c_str(), humedad_random, UUID_SENSOR_TEMPERATURA.c_str(), temperatura_random);
+        // String medicion_mentira = "[{\"u\": "+String(UUID_SENSOR_HUMEDAD)+", \"v\": "+String(humedad_random)+"}, {\"u\": "+String(UUID_SENSOR_TEMPERATURA)+", \"v\": "+String(temperatura_random)+"}]";
         // Send MQTT Topic
         Mqtt_PublishTopic(MQTT_TOPIC_MEDICIONES, medicion_mentira);
         // Blink LED

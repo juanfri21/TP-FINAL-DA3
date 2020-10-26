@@ -18,6 +18,21 @@ routerMetrica.get('/ultimosDatos/:idDispositivo/:tipo/:cantidad', function (req,
 		}
 	);
 });
+//SELECT s.*, m.* FROM Sensores as s JOIN Metricas as m ON (s.uuidSensor=s.uuidSensor) WHERE s.idDispositivo=2 AND s.tipo='actuador' and s.conectado=1  
+//ORDER BY `m`.`fecha` DESC
+routerMetrica.get('/actuador/:idDispositivo/:tipo/:cantidad', function (req, res) {
+	pool.query(
+		`SELECT s.nombre,ubicacion,conectado,unidad, m.valor,fecha FROM Sensores as s JOIN Metricas as m WHERE s.idDispositivo=? and s.tipo=? and s.conectado=1 LIMIT `+req.params.cantidad, 
+		[req.params.idDispositivo,req.params.tipo],
+		function (err, result, fields) {
+			if (err) {
+				res.send(err).status(400);
+				return;
+			}
+			res.send(result);
+		}
+	);
+});
 
 // routerMetrica.get('/ultimosDatos', function (req, res) {
 // 	pool.query(

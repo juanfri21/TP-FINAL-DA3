@@ -70,7 +70,7 @@ export default {
 		this.showProgressLoadingOn();
 
 		this.dispositivo_info = this.$route.params.dispositivo;
-		console.log(this.dispositivo_info)
+		console.log(this.dispositivo_info);
 		this.getListaSensores();
 	},
 	mounted() {},
@@ -110,12 +110,13 @@ export default {
 					this.mediciones_sensores = [...res.data];
 					// this.showProgressLoadingOff();
 					dataApi
-						.ultimosDatos(idDispositivo, 'actuador', 1)
+						.estadoActuador(idDispositivo, 'actuador', 1)
 						.then((res) => {
 							this.actuador = [...res.data];
+							console.log(res.data);
 							console.log(this.actuador[0]);
 							this.estado_actuador = this.actuador[0].valor ? 'Apagar' : 'Encender';
-							this.$mqtt.subscribe('+/actuador', { qos: 1 });
+							this.$mqtt.subscribe('ws/actuador', { qos: 1 });
 							// this.showProgressLoadingOff();
 						})
 						.catch((error) => {
@@ -141,17 +142,21 @@ export default {
 		},
 		publish() {
 			console.log('publish');
-			// this.$mqtt.publish(`${this.dispositivo_info.uuid}/actuador`, this.actuador[0].title);
-			this.$mqtt.publish(`actuadores`, JSON.stringify([{
-				v: this.estado_actuador === 'Encender' ? '1' : '0',
-				u: `${this.dispositivo_info.uuid}_3`,
-			}]));
-			this.estado_actuador = this.estado_actuador === 'Encender' ? 'Apagar' : 'Encender';
+			this.$mqtt.publish(
+				`${this.dispositivo_info.uuid}/actuador`,
+				this.estado_actuador === 'Encender' ? '1' : '0'
+			);
+			// this.$mqtt.publish(`${this.dispositivo_info.uuid}/actuador`, JSON.stringify([{
+			// 	v: this.estado_actuador === 'Encender' ? '1' : '0',
+			// 	u: `${this.dispositivo_info.uuid}_3`,
+			// }]));
+			// this.estado_actuador = this.estado_actuador === 'Encender' ? 'Apagar' : 'Encender';
 		},
 	},
 	mqtt: {
-		'+/actuador'(data, topic) {
+		'ws/actuador'(data, topic) {
 			console.log(topic + ': ' + String.fromCharCode.apply(null, data));
+			this.estado_actuador = this.estado_actuador === 'Encender' ? 'Apagar' : 'Encender';
 		},
 	},
 
