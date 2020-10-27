@@ -8,6 +8,8 @@ const routerOptions = [
     { path: '/dispositivo/:idDispositivo', name: 'dispositivo', meta: { showBreadcrumb: true } },
 	{ path: '/editar/:idDispositivo', name: 'editar', meta: { showBreadcrumb: true } },
 	{ path: '/informacion/:idDispositivo', name: 'informacion', meta: { showBreadcrumb: true } },
+	{ path: '/agregar', name: 'agregar', meta: { showBreadcrumb: true } },
+
     
 	//   { path: '/error', name: 'Error' },
 	// { path: '*', redirect: { name: 'Measurements' } },

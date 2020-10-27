@@ -20,7 +20,7 @@
 							</template>
 
 							<v-list-item
-								@click="clickOpcionDispositivo(dispositivo)"
+								@click="clickOpcionDispositivo(dispositivo, opcion)"
 								v-for="opcion in opciones_dispositivo"
 								:key="opcion.id"
 								link
@@ -35,6 +35,30 @@
 					</v-list>
 				</v-card>
 			</div>
+			<v-row justify="center">
+				<v-dialog v-model="eliminar" persistent max-width="380">
+					<v-card>
+						<v-card-title class="headline">
+							Desea eliminar el dispositivo?
+						</v-card-title>
+
+						<v-card-actions>
+							<v-spacer></v-spacer>
+							<v-btn color="green darken-1" text @click="clickEliminar(false)">
+								Cancelar
+							</v-btn>
+							<v-btn color="green darken-1" text @click="clickEliminar(true)">
+								Aceptar
+							</v-btn>
+						</v-card-actions>
+					</v-card>
+				</v-dialog>
+			</v-row>
+			<v-fab-transition>
+				<v-btn color="black" dark absolute top right fab @click="agregarNuevoDispositivo()">
+					<v-icon>mdi-plus</v-icon>
+				</v-btn>
+			</v-fab-transition>
 		</v-main>
 	</v-app>
 </template>
@@ -55,6 +79,7 @@ export default {
 			{ titulo: 'Eliminar', icon: 'mdi-delete', ruta: 'eliminar' },
 			{ titulo: 'Información', icon: 'mdi-information', ruta: 'informacion' },
 		],
+		eliminar: false,
 	}),
 
 	created() {
@@ -80,12 +105,32 @@ export default {
 					console.log(error);
 				});
 		},
-		clickOpcionDispositivo(dispositivo) {
-			this.$router.push({
-				name: 'dispositivo',
-				params: { idDispositivo: dispositivo.idDispositivo, dispositivo },
-			});
+		clickOpcionDispositivo(dispositivo, opcion) {
+			console.log(opcion.ruta);
+			if (opcion.ruta != 'eliminar') {
+				this.$router.push({
+					name: opcion.ruta,
+					params: { idDispositivo: dispositivo.idDispositivo, dispositivo },
+				});
+			} else {
+				this.eliminar = true;
+			}
 			console.log(dispositivo);
+		},
+		agregarNuevoDispositivo() {
+			this.$router.push({
+				name: 'agregar',
+				params: { idUsuario: this.idUsuario },
+			});
+		},
+		clickEliminar(eliminar) {
+			if (eliminar) {
+				console.log('eliminar');
+				this.eliminar = false;
+			} else {
+				console.log('NO eliminar');
+				this.eliminar = false;
+			}
 		},
 	},
 };

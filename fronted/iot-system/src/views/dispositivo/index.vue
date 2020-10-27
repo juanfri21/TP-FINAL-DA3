@@ -1,11 +1,11 @@
 <template>
 	<v-container>
 		<v-row>
-			<div class="pl-2 pr-2">
-				<v-btn elevation="5" block dark small @click="$router.go(-1)">Atras</v-btn>
-				<!-- <router-link to="/">Home</router-link> -->
-			</div>
 			<v-col>
+				<div class="pb-2 ml-5">
+					<v-btn elevation="5" dark small @click="$router.go(-1)">Atras</v-btn>
+					<!-- <router-link to="/">Home</router-link> -->
+				</div>
 				<v-banner v-if="!showProgress" :elevation="elevation">
 					<div align="left">
 						<h3 align="left">{{ dispositivo_info.nombre }} - {{ dispositivo_info.ubicacion }}</h3>
@@ -13,16 +13,21 @@
 				</v-banner>
 				<v-banner v-if="!showProgress" :elevation="elevation">
 					<div align="left">
-						<v-row>
-							<v-col cols="10"
-								><h3 align="left">{{ actuador[0].nombre }}</h3></v-col
-							>
-							<v-col cols="2">
+						<!-- <v-col cols="3"> -->
+						<div align="left">
+							<v-row>
+								<!-- <v-col cols="2"> -->
+								<h3 class="ml-4 mr-4">{{ actuador[0].nombre }}</h3>
+								<!-- </v-col> -->
+								<!-- <v-col cols="10"> -->
 								<v-btn elevation="5" dark small @click="publish">{{
 									this.estado_actuador
 								}}</v-btn>
-							</v-col>
-						</v-row>
+
+								<!-- </v-col> -->
+							</v-row>
+						</div>
+						<!-- </v-col> -->
 					</div>
 				</v-banner>
 
@@ -60,20 +65,20 @@ export default {
 		fechas: [],
 		lista_sensores: [],
 		actuador: [],
-		elevation: 5,
+		elevation: 0,
 		showProgress: false,
 		error: false,
 		estado_actuador: '',
 	}),
 
 	created() {
-		this.showProgressLoadingOn();
-
 		this.dispositivo_info = this.$route.params.dispositivo;
 		console.log(this.dispositivo_info);
 		this.getListaSensores();
 	},
-	mounted() {},
+	mounted() {
+		this.showProgressLoadingOn();
+	},
 	methods: {
 		getListaSensores() {
 			this.error = false;
