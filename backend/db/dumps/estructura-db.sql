@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `iot-system`.`Usuarios` (
 CREATE TABLE IF NOT EXISTS `iot-system`.`Dispositivos` (
   `idDispositivo` INT NOT NULL AUTO_INCREMENT,
   `uuid` VARCHAR(200) NOT NULL UNIQUE,
-  `nombre` VARCHAR(200),
+  `nombre` VARCHAR(200) NOT NULL,
   `ubicacion` VARCHAR(200),
   `conectado` INT NOT NULL,
   `fecha_creacion` DATETIME NOT NULL,
@@ -102,24 +102,24 @@ INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`,
 INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_2_2','sensor', 'temperatura', 'living', 1,current_timestamp(),current_timestamp(),22, 'C',2);
 INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_2_3','actuador', 'luz 2', 'living', 1,current_timestamp(),current_timestamp(),13, 'X',2);
 
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_1', 33, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_1', 34, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_1', 55, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_2', 33, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_2', 34, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_2', 0, current_timestamp() );
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_3', 1, current_timestamp() );
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_3', 0, current_timestamp() );
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_3', 1, current_timestamp() );
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_1', 33, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_1', 34, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_1', 45, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_2', 33, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_2', 34, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_2', 65, current_timestamp());
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_3', 1, current_timestamp() );
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_3', 0, current_timestamp() );
-INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_3', 1, current_timestamp() );
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_1', 33, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_1', 34, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_1', 55, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_2', 33, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_2', 34, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_2', 0, current_timestamp() );
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_3', 1, current_timestamp() );
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_3', 0, current_timestamp() );
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_3', 1, current_timestamp() );
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_1', 33, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_1', 34, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_1', 45, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_2', 33, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_2', 34, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_2', 65, current_timestamp());
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_3', 1, current_timestamp() );
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_3', 0, current_timestamp() );
+-- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_2_3', 1, current_timestamp() );
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
