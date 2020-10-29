@@ -104,7 +104,7 @@ export default {
 						descripcion: this.descripcion,
 						idDispositivo: this.dispositivo_info.idDispositivo,
 					})
-					.then((res) => {
+					.then(() => {
 						this.agregado_state.color = 'success';
 						this.agregado_state.mensaje = 'Dispositivo actualizado correctamente.';
 						this.agregado_state.estado = true;

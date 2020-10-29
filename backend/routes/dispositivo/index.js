@@ -17,7 +17,7 @@ routerDispositivo.get('/', function (req, res) {
 
 // obtengo lista de dispositivo de un usuario
 routerDispositivo.get('/:idUsuario', function (req, res) {
-	pool.query('Select * from Dispositivos where idUsuario=?', [req.params.idUsuario], function (
+	pool.query('Select * from Dispositivos where idUsuario=? and conectado=1', [req.params.idUsuario], function (
 		err,
 		result,
 		fields
@@ -57,7 +57,6 @@ routerDispositivo.post('/agregar', function (req, res) {
 	);
 });
 
-// UPDATE `Dispositivos` SET `conectado` = '0' WHERE `Dispositivos`.`idDispositivo` = 2;
 routerDispositivo.put('/eliminar', function (req, res) {
 	let current_datetime = moment().utcOffset('-0300').format('YYYY-MM-DD HH:mm:ss');
 	console.log(req.body);

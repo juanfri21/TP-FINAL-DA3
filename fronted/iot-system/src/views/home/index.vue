@@ -139,6 +139,7 @@ export default {
 						this.eliminado_state.color = 'success';
 						this.eliminado_state.mensaje = 'Dispositivo eliminado.';
 						this.eliminado_state.estado = true;
+						this.lista_dispositivos = [...this.lista_dispositivos.filter( e => e.idDispositivo !== this.eliminar.dispositivo.idDispositivo )]
 						setTimeout(() => {
 							this.eliminado_state.estado = false;
 						}, 2000);

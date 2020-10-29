@@ -45,21 +45,16 @@ dataApi.listaSensores = (idDispositivo) => {
 // -- API mediciones
 // -- -----------------------------------------------------
 
-// dataApi.ultimosDatos = (uuidSensor, tipo, cantidad) => {
-// 	const path_request = `/medicion/${uuidSensor}/${tipo}/${cantidad}`;
+dataApi.ultimosDatos = (sensores, cantidad) => {
+	const path_request = `/medicion/ultimosDatos`;
 
-// 	return iotSystemApi.get(`${path_request}`);
-// };
-dataApi.ultimosDatos = (idDispositivo, tipo, cantidad) => {
-	const path_request = `/medicion/ultimosDatos/${idDispositivo}/${tipo}/${cantidad}`;
-
-	return iotSystemApi.get(`${path_request}`);
+	return iotSystemApi.post(`${path_request}`, { sensores: sensores, cantidad: cantidad });
 };
 
-dataApi.estadoActuador = (idDispositivo, tipo, cantidad) => {
-	const path_request = `/medicion/actuador/${idDispositivo}/${tipo}/${cantidad}`;
+dataApi.estadoActuador = (uuidSensor, cantidad) => {
+	const path_request = `/medicion/actuador`;
 
-	return iotSystemApi.get(`${path_request}`);
+	return iotSystemApi.post(`${path_request}`, { uuidSensor: uuidSensor, cantidad: cantidad });
 };
 
 export default dataApi;

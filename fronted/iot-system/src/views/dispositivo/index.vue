@@ -4,30 +4,28 @@
 			<v-col>
 				<div class="pb-2 ml-5">
 					<v-btn elevation="5" dark small @click="$router.go(-1)">Atras</v-btn>
-					<!-- <router-link to="/">Home</router-link> -->
 				</div>
 				<v-banner v-if="!showProgress" :elevation="elevation">
 					<div align="left">
-						<h3 align="left">{{ dispositivo_info.nombre }} - {{ dispositivo_info.ubicacion }}</h3>
+						<h3 class="mb-1" align="left">
+							{{ dispositivo_info.nombre }} - {{ dispositivo_info.ubicacion }}
+						</h3>
 					</div>
 				</v-banner>
-				<v-banner v-if="!showProgress" :elevation="elevation">
+				<v-banner v-if="!showProgress && !posee_sensores" :elevation="elevation">
 					<div align="left">
-						<!-- <v-col cols="3"> -->
-						<div align="left">
-							<v-row>
-								<!-- <v-col cols="2"> -->
-								<h3 class="ml-4 mr-4">{{ actuador[0].nombre }}</h3>
-								<!-- </v-col> -->
-								<!-- <v-col cols="10"> -->
-								<v-btn elevation="5" dark small @click="publish">{{
-									this.estado_actuador
-								}}</v-btn>
-
-								<!-- </v-col> -->
-							</v-row>
-						</div>
-						<!-- </v-col> -->
+						<h3 align="left">No posee sensores conectados.</h3>
+					</div>
+				</v-banner>
+				<v-banner v-if="!showProgress && posee_sensores" :elevation="elevation">
+					<div align="left">
+						<v-row>
+							<h3 class="ml-4 mr-4">{{ nombre_actuador }}</h3>
+							<v-btn elevation="5" dark small @click="publish">{{
+								this.estado_actuador
+							}}</v-btn>
+							<v-btn class="ml-4" elevation="5" dark small @click="actualizarDatos">Actualizar</v-btn>
+						</v-row>
 					</div>
 				</v-banner>
 
@@ -39,11 +37,17 @@
 						indeterminate
 					></v-progress-circular>
 				</div>
-
-				<div v-for="plot in plotData" :key="plot.id" class=" mt-4">
-					<v-banner :elevation="elevation" v-if="!showProgress && !error">
-						<plot :key="plot.id" :id="plot.id" :traces="plot.data" :layout="plot.layout"></plot>
-					</v-banner>
+				<div v-if="posee_sensores">
+					<div v-for="plot in plotData" :key="plot.id" class=" mt-4">
+						<v-banner :elevation="elevation" v-if="!showProgress && !error">
+							<plot
+								:key="plot.id"
+								:id="plot.id"
+								:traces="plot.data"
+								:layout="plot.layout"
+							></plot>
+						</v-banner>
+					</div>
 				</div>
 			</v-col>
 		</v-row>
@@ -69,16 +73,16 @@ export default {
 		showProgress: false,
 		error: false,
 		estado_actuador: '',
+		posee_sensores: false,
+		nombre_actuador: '',
 	}),
 
 	created() {
 		this.dispositivo_info = this.$route.params.dispositivo;
-		console.log(this.dispositivo_info);
 		this.getListaSensores();
-	},
-	mounted() {
 		this.showProgressLoadingOn();
 	},
+	mounted() {},
 	methods: {
 		getListaSensores() {
 			this.error = false;
@@ -87,18 +91,15 @@ export default {
 				.listaSensores(this.dispositivo_info.idDispositivo)
 				.then((res) => {
 					this.mediciones_sensores = [];
-					console.log(res.data);
-					this.lista_sensores = [...res.data];
+					if (res.data[0]) {
+						this.posee_sensores = true;
+						this.lista_sensores = [...res.data];
+						let sensores = [...this.lista_sensores.filter((e) => e.tipo === 'sensor')];
 
-					this.getUltimosDatos(this.dispositivo_info.idDispositivo, 'sensor', 20);
-
-					// console.log(this.mediciones_sensores.filter(sen=> sen.nombre == this.lista_sensores[0].nombre))
-					// if (this.mediciones_sensores.length) {
-					// 	this.mediciones_sensores[0].data.forEach((element) => {
-					// 		this.fechas.push(moment(element.fecha).format('DD/MM/YYYY HH:mm:ss'));
-					// 		console.log(this.fechas);
-					// 	});
-					// }
+						this.getUltimosDatos(sensores, 20);
+					} else {
+						this.posee_sensores = false;
+					}
 				})
 				.catch((error) => {
 					console.log(error);
@@ -106,20 +107,20 @@ export default {
 					this.error = true;
 				});
 		},
-		getUltimosDatos(idDispositivo, tipo, cantidad) {
+		getUltimosDatos(sensores, cantidad) {
 			// console.log(uuidSensor, tipo, cantidad);
 			dataApi
-				.ultimosDatos(idDispositivo, tipo, cantidad)
+				.ultimosDatos(sensores, cantidad)
 				.then((res) => {
-					console.log(res.data);
 					this.mediciones_sensores = [...res.data];
+					let actuador = this.lista_sensores.filter((e) => e.tipo === 'actuador');
+					console.log(actuador);
+					this.nombre_actuador = actuador[0].nombre;
 					// this.showProgressLoadingOff();
 					dataApi
-						.estadoActuador(idDispositivo, 'actuador', 1)
+						.estadoActuador(actuador[0].uuidSensor, 1)
 						.then((res) => {
 							this.actuador = [...res.data];
-							console.log(res.data);
-							console.log(this.actuador[0]);
 							this.estado_actuador = this.actuador[0].valor ? 'Apagar' : 'Encender';
 							this.$mqtt.subscribe('ws/actuador', { qos: 1 });
 							// this.showProgressLoadingOff();
@@ -151,11 +152,11 @@ export default {
 				`${this.dispositivo_info.uuid}/actuador`,
 				this.estado_actuador === 'Encender' ? '1' : '0'
 			);
-			// this.$mqtt.publish(`${this.dispositivo_info.uuid}/actuador`, JSON.stringify([{
-			// 	v: this.estado_actuador === 'Encender' ? '1' : '0',
-			// 	u: `${this.dispositivo_info.uuid}_3`,
-			// }]));
-			// this.estado_actuador = this.estado_actuador === 'Encender' ? 'Apagar' : 'Encender';
+		},
+		actualizarDatos() {
+			let sensores = [...this.lista_sensores.filter((e) => e.tipo === 'sensor')];
+
+			this.getUltimosDatos(sensores, 20);
 		},
 	},
 	mqtt: {
@@ -185,12 +186,12 @@ export default {
 
 			trace_1.push({
 				y: this.mediciones_sensores
-					.filter((sen) => sen.nombre == this.lista_sensores[0].nombre)
+					.filter((sen) => sen.uuidSensor == this.lista_sensores[0].uuidSensor)
 					.map(function(item) {
 						return item.valor;
 					}),
 				x: this.mediciones_sensores
-					.filter((sen) => sen.nombre == this.lista_sensores[0].nombre)
+					.filter((sen) => sen.uuidSensor == this.lista_sensores[0].uuidSensor)
 					.map(function(item) {
 						return moment(item.fecha)
 							.parseZone()
@@ -201,12 +202,12 @@ export default {
 
 			trace_2.push({
 				y: this.mediciones_sensores
-					.filter((sen) => sen.nombre == this.lista_sensores[1].nombre)
+					.filter((sen) => sen.uuidSensor == this.lista_sensores[1].uuidSensor)
 					.map(function(item) {
 						return item.valor;
 					}),
 				x: this.mediciones_sensores
-					.filter((sen) => sen.nombre == this.lista_sensores[1].nombre)
+					.filter((sen) => sen.uuidSensor == this.lista_sensores[1].uuidSensor)
 					.map(function(item) {
 						return moment(item.fecha)
 							.parseZone()
