@@ -36,7 +36,7 @@
 				</v-card>
 			</div>
 			<v-row justify="center">
-				<v-dialog v-model="eliminar" persistent max-width="380">
+				<v-dialog v-model="eliminar.estado" persistent max-width="380">
 					<v-card>
 						<v-card-title class="headline">
 							Desea eliminar el dispositivo?
@@ -54,6 +54,15 @@
 					</v-card>
 				</v-dialog>
 			</v-row>
+			<v-alert
+				:type="eliminado_state.color"
+				dense
+				width="350"
+				elevation="5"
+				:value="eliminado_state.estado"
+			>
+				{{ eliminado_state.mensaje }}
+			</v-alert>
 			<v-fab-transition>
 				<v-btn color="black" dark absolute top right fab @click="agregarNuevoDispositivo()">
 					<v-icon>mdi-plus</v-icon>
@@ -80,6 +89,7 @@ export default {
 			{ titulo: 'Información', icon: 'mdi-information', ruta: 'informacion' },
 		],
 		eliminar: false,
+		eliminado_state: { estado: false, mensaje: 'Dispositivo eliminado.', color: 'success' },
 	}),
 
 	created() {
@@ -106,16 +116,14 @@ export default {
 				});
 		},
 		clickOpcionDispositivo(dispositivo, opcion) {
-			console.log(opcion.ruta);
 			if (opcion.ruta != 'eliminar') {
 				this.$router.push({
 					name: opcion.ruta,
 					params: { idDispositivo: dispositivo.idDispositivo, dispositivo },
 				});
 			} else {
-				this.eliminar = true;
+				this.eliminar = { estado: true, dispositivo: dispositivo };
 			}
-			console.log(dispositivo);
 		},
 		agregarNuevoDispositivo() {
 			this.$router.push({
@@ -125,11 +133,28 @@ export default {
 		},
 		clickEliminar(eliminar) {
 			if (eliminar) {
-				console.log('eliminar');
-				this.eliminar = false;
+				dataApi
+					.eliminarDispositivo(this.eliminar.dispositivo.idDispositivo)
+					.then(() => {
+						this.eliminado_state.color = 'success';
+						this.eliminado_state.mensaje = 'Dispositivo eliminado.';
+						this.eliminado_state.estado = true;
+						setTimeout(() => {
+							this.eliminado_state.estado = false;
+						}, 2000);
+					})
+					.catch((error) => {
+						this.eliminado_state.color = 'error';
+						this.eliminado_state.mensaje = 'No se pudo eliminar el dispositivo.';
+						this.eliminado_state.estado = true;
+						setTimeout(() => {
+							this.eliminado_state.estado = false;
+						}, 2000);
+						console.log(error);
+					});
+				this.eliminar.estado = false;
 			} else {
-				console.log('NO eliminar');
-				this.eliminar = false;
+				this.eliminar.estado = false;
 			}
 		},
 	},

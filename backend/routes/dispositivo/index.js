@@ -54,4 +54,20 @@ routerDispositivo.post('/agregar', function (req, res) {
 	);
 });
 
+// UPDATE `Dispositivos` SET `conectado` = '0' WHERE `Dispositivos`.`idDispositivo` = 2;
+routerDispositivo.put('/eliminar/', function (req, res) {
+	console.log(req.body)
+	pool.query('UPDATE Dispositivos SET conectado=0 WHERE Dispositivos.idDispositivo=?', [req.body.idDispositivo], function (
+		err,
+		result,
+		fields
+	) {
+		if (err) {
+			res.send(err).status(400);
+			return;
+		}
+		res.send(result);
+	});
+});
+
 module.exports = routerDispositivo;

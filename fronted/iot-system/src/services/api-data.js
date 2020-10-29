@@ -8,25 +8,22 @@ const dataApi = {};
 
 dataApi.getDispositivos = (user_id) => {
 	const path_request = `/dispositivo/${user_id}`;
-	console.log(user_id)
 	return iotSystemApi.get(`${path_request}`);
 };
 
 dataApi.agregarDispositivo = (dispositivo) => {
 	const path_request = `/dispositivo/agregar`;
-	console.log(dispositivo);
 	return iotSystemApi.post(`${path_request}`, dispositivo);
 };
 
 dataApi.actualizarDispositivo = (dispositivo) => {
 	const path_request = `/dispositivo/actualizar`;
-	console.log(dispositivo);
 	return iotSystemApi.put(`${path_request}`, dispositivo);
 };
 
-dataApi.bajaDispositivo = (idDispositivo) => {
-	const path_request = `/dispositivo/baja`;
-	return iotSystemApi.delete(`${path_request}`, { idDispositivo: idDispositivo });
+dataApi.eliminarDispositivo = (idDispositivo) => {
+	const path_request = `/dispositivo/eliminar`;
+	return iotSystemApi.put(`${path_request}`, { idDispositivo: idDispositivo });
 };
 
 dataApi.altaDispositivo = (idDispositivo) => {
