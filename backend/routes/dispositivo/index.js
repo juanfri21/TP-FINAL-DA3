@@ -1,6 +1,7 @@
 var express = require('express');
 var routerDispositivo = express.Router();
 var pool = require('../../mysql');
+var moment = require('moment');
 
 //Devuelve un array de dispositivos
 routerDispositivo.get('/', function (req, res) {
@@ -32,6 +33,8 @@ routerDispositivo.get('/:idUsuario', function (req, res) {
 // agrego dispositivo
 routerDispositivo.post('/agregar', function (req, res) {
 	console.log(req.body);
+	let current_datetime = moment().utcOffset('-0300').format('YYYY-MM-DD HH:mm:ss');
+
 	pool.query(
 		'INSERT INTO Dispositivos (uuid, nombre,ubicacion,conectado,fecha_creacion,fecha_actualizacion,descripcion,idUsuario) values (?,?,?,?,?,?,?,?)',
 		[
@@ -39,8 +42,8 @@ routerDispositivo.post('/agregar', function (req, res) {
 			req.body.nombre,
 			req.body.ubicacion,
 			req.body.conectado,
-			req.body.fecha_creacion,
-			req.body.fecha_actualizacion,
+			current_datetime,
+			current_datetime,
 			req.body.descripcion,
 			req.body.idUsuario,
 		],
@@ -55,19 +58,36 @@ routerDispositivo.post('/agregar', function (req, res) {
 });
 
 // UPDATE `Dispositivos` SET `conectado` = '0' WHERE `Dispositivos`.`idDispositivo` = 2;
-routerDispositivo.put('/eliminar/', function (req, res) {
-	console.log(req.body)
-	pool.query('UPDATE Dispositivos SET conectado=0 WHERE Dispositivos.idDispositivo=?', [req.body.idDispositivo], function (
-		err,
-		result,
-		fields
-	) {
-		if (err) {
-			res.send(err).status(400);
-			return;
+routerDispositivo.put('/eliminar', function (req, res) {
+	let current_datetime = moment().utcOffset('-0300').format('YYYY-MM-DD HH:mm:ss');
+	console.log(req.body);
+	pool.query(
+		'UPDATE Dispositivos SET conectado=0,fecha_actualizacion=? WHERE Dispositivos.idDispositivo=?',
+		[current_datetime, req.body.idDispositivo],
+		function (err, result, fields) {
+			if (err) {
+				res.send(err).status(400);
+				return;
+			}
+			res.send(result);
 		}
-		res.send(result);
-	});
+	);
+});
+
+routerDispositivo.put('/actualizar', function (req, res) {
+	let current_datetime = moment().utcOffset('-0300').format('YYYY-MM-DD HH:mm:ss');
+	console.log(req.body);
+	pool.query(
+		'UPDATE Dispositivos SET nombre=?,ubicacion=?,descripcion=?,fecha_actualizacion=? WHERE Dispositivos.idDispositivo=?',
+		[req.body.nombre, req.body.ubicacion, req.body.descripcion, current_datetime, req.body.idDispositivo],
+		function (err, result, fields) {
+			if (err) {
+				res.send(err).status(400);
+				return;
+			}
+			res.send(result);
+		}
+	);
 });
 
 module.exports = routerDispositivo;
