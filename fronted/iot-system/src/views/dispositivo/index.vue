@@ -14,7 +14,7 @@
 				</v-banner>
 				<v-banner v-if="!showProgress && !posee_sensores" :elevation="elevation">
 					<div align="left">
-						<h3 align="left">No posee sensores conectados.</h3>
+						<h3 align="left">No se encontraron datos del dispositivo.</h3>
 					</div>
 				</v-banner>
 				<v-banner v-if="!showProgress && posee_sensores" :elevation="elevation">
@@ -24,7 +24,9 @@
 							<v-btn elevation="5" dark small @click="publish">{{
 								this.estado_actuador
 							}}</v-btn>
-							<v-btn class="ml-4" elevation="5" dark small @click="actualizarDatos">Actualizar</v-btn>
+							<v-btn class="ml-4" elevation="5" dark small @click="actualizarDatos"
+								>Actualizar</v-btn
+							>
 						</v-row>
 					</div>
 				</v-banner>
@@ -92,7 +94,6 @@ export default {
 				.then((res) => {
 					this.mediciones_sensores = [];
 					if (res.data[0]) {
-						this.posee_sensores = true;
 						this.lista_sensores = [...res.data];
 						let sensores = [...this.lista_sensores.filter((e) => e.tipo === 'sensor')];
 
@@ -112,24 +113,30 @@ export default {
 			dataApi
 				.ultimosDatos(sensores, cantidad)
 				.then((res) => {
-					this.mediciones_sensores = [...res.data];
-					let actuador = this.lista_sensores.filter((e) => e.tipo === 'actuador');
-					console.log(actuador);
-					this.nombre_actuador = actuador[0].nombre;
-					// this.showProgressLoadingOff();
-					dataApi
-						.estadoActuador(actuador[0].uuidSensor, 1)
-						.then((res) => {
-							this.actuador = [...res.data];
-							this.estado_actuador = this.actuador[0].valor ? 'Apagar' : 'Encender';
-							this.$mqtt.subscribe('ws/actuador', { qos: 1 });
-							// this.showProgressLoadingOff();
-						})
-						.catch((error) => {
-							console.log(error);
-							this.showProgressLoadingOff();
-							this.error = true;
-						});
+					if (res.data[0]) {
+						this.posee_sensores = true;
+
+						this.mediciones_sensores = [...res.data];
+						let actuador = this.lista_sensores.filter((e) => e.tipo === 'actuador');
+						console.log(actuador);
+						this.nombre_actuador = actuador[0].nombre;
+						// this.showProgressLoadingOff();
+						dataApi
+							.estadoActuador(actuador[0].uuidSensor, 1)
+							.then((res) => {
+								this.actuador = [...res.data];
+								this.estado_actuador = this.actuador[0].valor ? 'Apagar' : 'Encender';
+								this.$mqtt.subscribe('ws/actuador', { qos: 1 });
+								// this.showProgressLoadingOff();
+							})
+							.catch((error) => {
+								console.log(error);
+								this.showProgressLoadingOff();
+								this.error = true;
+							});
+					} else {
+						this.posee_sensores = false;
+					}
 				})
 				.catch((error) => {
 					console.log(error);

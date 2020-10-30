@@ -64,7 +64,16 @@
 				{{ eliminado_state.mensaje }}
 			</v-alert>
 			<v-fab-transition>
-				<v-btn color="black" dark absolute top right fab @click="agregarNuevoDispositivo()">
+				<v-btn
+					color="black"
+					elevation="20"
+					dark
+					absolute
+					top
+					right
+					fab
+					@click="agregarNuevoDispositivo()"
+				>
 					<v-icon>mdi-plus</v-icon>
 				</v-btn>
 			</v-fab-transition>
@@ -139,7 +148,11 @@ export default {
 						this.eliminado_state.color = 'success';
 						this.eliminado_state.mensaje = 'Dispositivo eliminado.';
 						this.eliminado_state.estado = true;
-						this.lista_dispositivos = [...this.lista_dispositivos.filter( e => e.idDispositivo !== this.eliminar.dispositivo.idDispositivo )]
+						this.lista_dispositivos = [
+							...this.lista_dispositivos.filter(
+								(e) => e.idDispositivo !== this.eliminar.dispositivo.idDispositivo
+							),
+						];
 						setTimeout(() => {
 							this.eliminado_state.estado = false;
 						}, 2000);
