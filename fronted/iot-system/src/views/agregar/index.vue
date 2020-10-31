@@ -2,11 +2,6 @@
 	<v-container>
 		<div class="pb-2 pt-2">
 			<v-row>
-				<v-col cols="auto" class="mr-auto">
-					<v-btn elevation="5" dark small @click="$router.go(-1)">Atras</v-btn>
-				</v-col>
-
-				<v-spacer></v-spacer>
 				<v-col cols="auto">
 					<v-alert
 						:type="agregado_state.color"

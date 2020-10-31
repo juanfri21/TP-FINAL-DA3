@@ -84,7 +84,7 @@ routerDispositivo.post('/agregar', function (req, res) {
 						],
 						[
 							`${req.body.uuid}_3`,
-							'sensor',
+							'actuador',
 							'Actuador',
 							req.body.ubicacion,
 							1,

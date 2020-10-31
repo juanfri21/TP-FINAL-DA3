@@ -2,9 +2,6 @@
 	<v-container>
 		<v-row>
 			<v-col>
-				<div class="pb-2 ml-5">
-					<v-btn elevation="5" dark small @click="$router.go(-1)">Atras</v-btn>
-				</div>
 				<v-banner v-if="!showProgress" :elevation="elevation">
 					<div align="left">
 						<h3 class="mb-1" align="left">
@@ -24,7 +21,7 @@
 							<v-btn elevation="5" dark small @click="publish">{{
 								this.estado_actuador
 							}}</v-btn>
-							<v-btn class="ml-4" elevation="5" dark small @click="actualizarDatos"
+							<v-btn class="mr-6 ml-auto" elevation="5" dark small @click="actualizarDatos"
 								>Actualizar</v-btn
 							>
 						</v-row>
@@ -94,6 +91,7 @@ export default {
 				.then((res) => {
 					this.mediciones_sensores = [];
 					if (res.data[0]) {
+						this.posee_sensores = true;
 						this.lista_sensores = [...res.data];
 						let sensores = [...this.lista_sensores.filter((e) => e.tipo === 'sensor')];
 
@@ -114,18 +112,17 @@ export default {
 				.ultimosDatos(sensores, cantidad)
 				.then((res) => {
 					if (res.data[0]) {
-						this.posee_sensores = true;
-
 						this.mediciones_sensores = [...res.data];
 						let actuador = this.lista_sensores.filter((e) => e.tipo === 'actuador');
-						console.log(actuador);
 						this.nombre_actuador = actuador[0].nombre;
 						// this.showProgressLoadingOff();
 						dataApi
 							.estadoActuador(actuador[0].uuidSensor, 1)
 							.then((res) => {
 								this.actuador = [...res.data];
-								this.estado_actuador = this.actuador[0].valor ? 'Apagar' : 'Encender';
+								if (this.actuador[0]) {
+									this.estado_actuador = this.actuador[0].valor ? 'Apagar' : 'Encender';
+								} else this.estado_actuador = 'Encender';
 								this.$mqtt.subscribe('ws/actuador', { qos: 1 });
 								// this.showProgressLoadingOff();
 							})
@@ -225,13 +222,14 @@ export default {
 			var layout1 = {
 				title: 'Sensor de Humedad',
 				yaxis: {
-					title: 'Humedad',
+					title: 'Humedad [%]',
+					range: [0, 100],
 				},
 			};
 			var layout2 = {
 				title: 'Sensor de Temperatura',
 				yaxis: {
-					title: 'Temperatura',
+					title: 'Temperatura [C]',
 				},
 			};
 

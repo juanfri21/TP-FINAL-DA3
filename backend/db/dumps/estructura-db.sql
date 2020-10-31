@@ -90,17 +90,17 @@ CREATE TABLE IF NOT EXISTS `iot-system`.`Metricas` (
 ENGINE = InnoDB;
 
 INSERT INTO `Usuarios` (`nombre`, `email`, `contraseña`, `fecha_creacion`, `fecha_actualizacion`, `rol`) VALUES ('juan', 'juan@gmail.com', '2222', current_timestamp(), current_timestamp(), 'admin');
-INSERT INTO `Dispositivos` (`uuid`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`, `descripcion`, `idUsuario`) VALUES ('SERIAL_1', 'dispositivo 1', 'patio', 1, current_timestamp(),current_timestamp(), 'nada', 1);
-INSERT INTO `Dispositivos` (`uuid`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`, `descripcion`, `idUsuario`) VALUES ('SERIAL_2', 'dispositivo 2', 'living', 1, current_timestamp(),current_timestamp(), 'nada', 1);
+-- INSERT INTO `Dispositivos` (`uuid`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`, `descripcion`, `idUsuario`) VALUES ('SERIAL_1', 'dispositivo 1', 'patio', 1, current_timestamp(),current_timestamp(), 'nada', 1);
+-- INSERT INTO `Dispositivos` (`uuid`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`, `descripcion`, `idUsuario`) VALUES ('SERIAL_2', 'dispositivo 2', 'living', 1, current_timestamp(),current_timestamp(), 'nada', 1);
 
 
-INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_1_1','sensor', 'humedad', 'patio', 1,current_timestamp(),current_timestamp(),33, 'C',1);
-INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_1_2','sensor', 'temperatura', 'patio', 1,current_timestamp(),current_timestamp(),22, 'C',1);
-INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_1_3','actuador', 'luz 1', 'patio', 1,current_timestamp(),current_timestamp(),13, 'X',1);
+-- INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_1_1','sensor', 'humedad', 'patio', 1,current_timestamp(),current_timestamp(),33, 'C',1);
+-- INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_1_2','sensor', 'temperatura', 'patio', 1,current_timestamp(),current_timestamp(),22, 'C',1);
+-- INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_1_3','actuador', 'luz 1', 'patio', 1,current_timestamp(),current_timestamp(),13, 'X',1);
 
-INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_2_1','sensor', 'humedad', 'living', 1,current_timestamp(),current_timestamp(),33, 'C',2);
-INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_2_2','sensor', 'temperatura', 'living', 1,current_timestamp(),current_timestamp(),22, 'C',2);
-INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_2_3','actuador', 'luz 2', 'living', 1,current_timestamp(),current_timestamp(),13, 'X',2);
+-- INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_2_1','sensor', 'humedad', 'living', 1,current_timestamp(),current_timestamp(),33, 'C',2);
+-- INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_2_2','sensor', 'temperatura', 'living', 1,current_timestamp(),current_timestamp(),22, 'C',2);
+-- INSERT INTO `Sensores` (`uuidSensor`,`tipo`, `nombre`, `ubicacion`, `conectado`, `fecha_creacion`, `fecha_actualizacion`,`codigo`, `unidad`, `idDispositivo`) VALUES ('SERIAL_2_3','actuador', 'luz 2', 'living', 1,current_timestamp(),current_timestamp(),13, 'X',2);
 
 -- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_1', 33, current_timestamp());
 -- INSERT INTO `Metricas` (`uuidSensor`,`valor`, `fecha`) VALUES ('SERIAL_1_1', 34, current_timestamp());

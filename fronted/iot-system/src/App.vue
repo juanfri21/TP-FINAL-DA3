@@ -2,7 +2,11 @@
 	<v-app>
 		<v-main>
 			<v-app-bar color="#5852f2" dark short>
-				<v-toolbar-title class="pl-1">Iot System</v-toolbar-title>
+				<v-toolbar-title class="pl-1"
+					><v-btn v-if="this.$router.currentRoute.name != 'home'" @click="$router.go(-1)" icon
+						><v-icon> mdi-arrow-left </v-icon></v-btn
+					>Iot System</v-toolbar-title
+				>
 			</v-app-bar>
 
 			<router-view></router-view>
